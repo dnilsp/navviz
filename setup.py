@@ -9,13 +9,13 @@ def readme():
 
 setup(
     name="navviz",
-    version="0.1.0",
+    version="0.1.1",
     description="Visualize navigation endpoints in frontend projects.",
     long_description=readme(),
     long_description_content_type="text/markdown",
-    author="Your Name",
-    author_email="your@email.com",
-    url="https://github.com/yourusername/navviz",
+    author="Daniel N",
+    author_email="danielnordgrensp@gmail.com",
+    url="https://github.com/dnilsp/navviz",
     license="MIT",
     packages=find_packages(),
     install_requires=[
