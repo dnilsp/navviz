@@ -2,11 +2,52 @@ Metadata-Version: 2.4
 Name: navviz
 Version: 0.1.0
 Summary: Visualize navigation endpoints in frontend projects.
+Home-page: https://github.com/yourusername/navviz
 Author: Your Name
+Author-email: your@email.com
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Classifier: Environment :: Console
 Requires-Python: >=3.7
+Description-Content-Type: text/markdown
 Requires-Dist: networkx
 Requires-Dist: matplotlib
 Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
 Dynamic: requires-dist
 Dynamic: requires-python
 Dynamic: summary
+
+# navviz
+
+A Python CLI tool for visualizing navigation endpoints in frontend projects.
+
+## Features
+- Detects project language/framework
+- Parses navigation/routes (initially for React, extensible to others)
+- Generates navigation graphs (Graphviz/NetworkX)
+- Outputs diagrams in-terminal (ASCII/Mermaid) or as PDF
+
+## Usage
+```
+python -m navviz <project_path> [--output pdf|terminal]
+```
+
+## Requirements
+- Python 3.8+
+- See requirements.txt for dependencies
+
+## Roadmap
+- [ ] React/JSX navigation parsing
+- [ ] Support for other frameworks/languages
+- [ ] PDF and terminal output
+- [ ] Modular plugin system
