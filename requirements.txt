@@ -1,0 +1,4 @@
+# Requirements for navviz
+networkx
+matplotlib
+argparse

@@ -1,0 +1,2 @@
+[console_scripts]
+navviz = navviz.cli:main
