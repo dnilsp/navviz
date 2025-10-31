@@ -16,13 +16,15 @@ def detect_project_type(project_path):
         return "flutter"
     return "unknown"
 
-def parse_navigation(project_path, project_type):
+def parse_navigation(project_path, project_type, debug=False):
     import os
     import re
-    print(f"[DEBUG] Entered parse_navigation for project_type: {project_type}")
+    if debug:
+        print(f"[DEBUG] Entered parse_navigation for project_type: {project_type}")
     nav_data = []  # List of (source_file, route_matches, link_matches, stack_screens)
     if project_type == "react":
-        print(f"[DEBUG] Scanning for routes in: {project_path}")
+        if debug:
+            print(f"[DEBUG] Scanning for routes in: {project_path}")
         for root, dirs, files in os.walk(project_path):
             dirs[:] = [d for d in dirs if not d.startswith('node_modules') and not d.startswith('.')]
             if 'node_modules' in root or '/.' in root or '\\.' in root:
@@ -30,7 +32,8 @@ def parse_navigation(project_path, project_type):
             for fname in files:
                 if fname.endswith((".js", ".jsx", ".ts", ".tsx")):
                     fpath = os.path.join(root, fname)
-                    print(f"[DEBUG] Reading file: {fpath}")
+                    if debug:
+                        print(f"[DEBUG] Reading file: {fpath}")
                     try:
                         with open(fpath, encoding="utf-8") as f:
                             content = f.read()
@@ -38,16 +41,19 @@ def parse_navigation(project_path, project_type):
                         route_matches = [m.strip() for m in re.findall(r'<Route[^>]*?path\s*=\s*["\']([^"\']+)["\'][^>]*/?>', content_flat) if m.strip().startswith("/")]
                         link_matches = [m.strip() for m in re.findall(r'<Link[^>]*?to\s*=\s*["\']([^"\']+)["\'][^>]*/?>', content_flat) if m.strip().startswith("/")]
                         obj_matches = [m.strip() for m in re.findall(r'path\s*:\s*["\']([^"\']+)["\']', content_flat) if m.strip().startswith("/")]
-                        # Stack Navigator: <Stack.Screen name="..." component=... />
-                        stack_screens = [m.strip() for m in re.findall(r'<Stack\.Screen[^>]*?name\s*=\s*["\']([^"\']+)["\']', content_flat)]
+                        # Stack Navigator: <Stack.Screen name="..." ... /> (robust multiline/props)
+                        stack_screen_pattern = r'<Stack\.Screen[^>]*?name\s*=\s*["\']([^"\']+)["\']'
+                        stack_screens = [m.strip() for m in re.findall(stack_screen_pattern, content, re.DOTALL | re.IGNORECASE)]
                         # Merge object style matches into route_matches
                         route_matches += obj_matches
                         nav_data.append((fpath, route_matches, link_matches, stack_screens))
-                        print(f"[DEBUG] Route matches: {route_matches}")
-                        print(f"[DEBUG] Link matches: {link_matches}")
-                        print(f"[DEBUG] Stack screens: {stack_screens}")
+                        if debug:
+                            print(f"[DEBUG] Route matches: {route_matches}")
+                            print(f"[DEBUG] Link matches: {link_matches}")
+                            print(f"[DEBUG] Stack screens: {stack_screens}")
                     except Exception as e:
-                        print(f"[DEBUG] Error reading {fpath}: {e}")
+                        if debug:
+                            print(f"[DEBUG] Error reading {fpath}: {e}")
                         continue
     # TODO: Add support for other frameworks
     return nav_data
