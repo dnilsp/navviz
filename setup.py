@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name="navviz",
-    version="0.1.1",
+    version="0.1.2",
     description="Visualize navigation endpoints in frontend projects.",
     long_description=readme(),
     long_description_content_type="text/markdown",
