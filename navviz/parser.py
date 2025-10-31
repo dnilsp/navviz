@@ -20,7 +20,7 @@ def parse_navigation(project_path, project_type):
     import os
     import re
     print(f"[DEBUG] Entered parse_navigation for project_type: {project_type}")
-    nav_data = []  # List of (source_file, route_matches, link_matches)
+    nav_data = []  # List of (source_file, route_matches, link_matches, stack_screens)
     if project_type == "react":
         print(f"[DEBUG] Scanning for routes in: {project_path}")
         for root, dirs, files in os.walk(project_path):
@@ -38,11 +38,14 @@ def parse_navigation(project_path, project_type):
                         route_matches = [m.strip() for m in re.findall(r'<Route[^>]*?path\s*=\s*["\']([^"\']+)["\'][^>]*/?>', content_flat) if m.strip().startswith("/")]
                         link_matches = [m.strip() for m in re.findall(r'<Link[^>]*?to\s*=\s*["\']([^"\']+)["\'][^>]*/?>', content_flat) if m.strip().startswith("/")]
                         obj_matches = [m.strip() for m in re.findall(r'path\s*:\s*["\']([^"\']+)["\']', content_flat) if m.strip().startswith("/")]
+                        # Stack Navigator: <Stack.Screen name="..." component=... />
+                        stack_screens = [m.strip() for m in re.findall(r'<Stack\.Screen[^>]*?name\s*=\s*["\']([^"\']+)["\']', content_flat)]
                         # Merge object style matches into route_matches
                         route_matches += obj_matches
-                        nav_data.append((fpath, route_matches, link_matches))
+                        nav_data.append((fpath, route_matches, link_matches, stack_screens))
                         print(f"[DEBUG] Route matches: {route_matches}")
                         print(f"[DEBUG] Link matches: {link_matches}")
+                        print(f"[DEBUG] Stack screens: {stack_screens}")
                     except Exception as e:
                         print(f"[DEBUG] Error reading {fpath}: {e}")
                         continue
